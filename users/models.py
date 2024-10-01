@@ -24,8 +24,7 @@ class User(AbstractUser):
         fr = "fr", "France"
         it = "it", "Italy"
         ca = "ca", "Canada"
-        
-    nick_name = models.CharField(max_length=20, blank=True, editable=False,)
+
     first_name = models.CharField(max_length=30, blank=True, editable=False,)
     last_name = models.CharField(max_length=30, blank=True, editable=False,)
     image = models.ImageField(blank=True, null=True,)
