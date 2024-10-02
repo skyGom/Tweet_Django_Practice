@@ -1,0 +1,8 @@
+{% if not not_found %}
+    <h1>{{ tweet.payload }}</h1>
+    <p>{{ tweet.user }}</p>
+    <p>{{ tweet.likes.count }}</p>
+    <p>{{ tweet.created_at }}</p>
+{% else %}
+    <h1>404 Not Found</h1>
+{% endif %}

@@ -1,0 +1,9 @@
+<h1>{{title}}</h1>
+
+<ul>
+    {% for tweet in tweets %}
+    <li>
+        <a href="/tweets/{{tweet.pk}}">{{tweet}}</a>
+    </li>
+    {% endfor %}
+</ul>
