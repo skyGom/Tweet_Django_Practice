@@ -1,53 +1,28 @@
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from .models import User
 from .serializers import UserListSerializer, UserDetailSerializer
 from tweets.serializers import TweetSerializer
 
-@api_view()
-def user_list(request):
-    users = User.objects.all()
-    serializer = UserListSerializer(users, many=True)
-    return Response(
-        {
-            "state": True,
-            "users": serializer.data,
-        },
-    )
-    
-@api_view()
-def user_detail(request, user_id):
-    try:
-        user = User.objects.get(username=user_id)
-        serializer = UserDetailSerializer(user)
-        return Response(
-            {
-                "state": True,
-                "user_info": serializer.data,
-            },
-        )
-    except User.DoesNotExist:
-        return Response(
-            {
-                "state": False,
-            },
-        )
+class UserListView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        serializer = UserListSerializer(users, many=True)
+        return Response(serializer.data)
+
+class UserDetailView(APIView):
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(username=user_id)
+        except User.DoesNotExist:
+            raise NotFound
         
-@api_view()
-def user_tweets(request, user_id):
-    try:
-        user = User.objects.get(username=user_id)
-        all_user_tweets = user.tweets.all()
-        serializer = TweetSerializer(all_user_tweets, many=True)
-        return Response(
-            {
-                "state": True,
-                "user_tweets": serializer.data,
-            },
-        )
-    except User.DoesNotExist:
-        return Response(
-            {
-                "state": False,
-            },
-        )
+    def get(self, request, user_id):
+        serializer = UserDetailSerializer(self.get_user(user_id))
+        return Response(serializer.data)
+
+class UserTweetsView(UserDetailView):
+    def get(self, request, user_id):
+        serializer = TweetSerializer(self.get_user(user_id).tweets.all(), many=True)
+        return Response(serializer.data)
