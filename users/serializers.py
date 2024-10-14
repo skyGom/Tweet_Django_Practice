@@ -10,7 +10,7 @@ class UserListSerializer(serializers.ModelSerializer):
             "legion",
         ]
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class PrivateUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
@@ -19,4 +19,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "last_name",
             "gender",
             "legion",
+            "password",
+            "user_permissions",
         ]

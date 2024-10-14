@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .models import User
-from .serializers import UserListSerializer, UserDetailSerializer
+from .serializers import UserListSerializer, PrivateUserDetailSerializer
 from tweets.serializers import TweetSerializer
 from django.contrib.auth import authenticate, login, logout
 
@@ -20,7 +20,7 @@ class UserListView(APIView):
         if not password:
             raise ParseError
         
-        serializer = UserListSerializer(data=request.data)
+        serializer = PrivateUserDetailSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             user.set_password(password)
@@ -37,7 +37,7 @@ class UserDetailView(APIView):
             raise NotFound
         
     def get(self, request, user_pk):
-        serializer = UserDetailSerializer(self.get_user(user_pk))
+        serializer = PrivateUserDetailSerializer(self.get_user(user_pk))
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserTweetsView(UserDetailView):
